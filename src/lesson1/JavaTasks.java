@@ -3,10 +3,10 @@ package lesson1;
 import kotlin.NotImplementedError;
 
 
-
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Scanner;
 
@@ -41,6 +41,9 @@ public class JavaTasks {
      * 07:56:14 PM
      * <p>
      * В случае обнаружения неверного формата файла бросить любое исключение.
+     * <p>
+     * Ресурсоемкость O(N);
+     * Трудоемкость O(N*log(N));
      */
     static public void sortTimes(String inputName, String outputName) throws Exception {
 
@@ -58,7 +61,7 @@ public class JavaTasks {
         for (int time : timeList) {
             boolean pm = false;
             if (time >= 2000000) pm = true;
-            time %=1000000;
+            time %= 1000000;
             if (time < 10000) time += 120000;
             outputWriter.write(String.format("%02d:%02d:%02d", time / 10000, time % 10000 / 100, time % 100));
             if (pm) outputWriter.write(" PM\n");
@@ -140,25 +143,35 @@ public class JavaTasks {
      * 24.7
      * 99.5
      * 121.3
+     * <p>
+     * Ресурсоемкость O(N);
+     * Трудоемкость O(N+K);
      */
     static public void sortTemperatures(String inputName, String outputName) throws Exception {
         FileReader inputReader = new FileReader(inputName);
         Scanner inputScanner = new Scanner(inputReader);
-        ArrayList<Double> tempCounter = new ArrayList<>();
+        int[] count = new int[7731];
+        Arrays.fill(count, 1, 7731, 0);
+
         while (inputScanner.hasNextLine()) {
             String line = inputScanner.nextLine();
             if (line.matches("([1-4]?\\d{1,2}.\\d)|(500.0)|(-[1]?\\d{1,2}.\\d)|(-2[0-6]\\d.\\d)|(-27[0-2].\\d)|(-273.0)")) {
-                double temperature = Double.parseDouble(line);
-                tempCounter.add(temperature);
-            }
-            else throw new Exception("Wrong data in file");
-    }
+                int temperature = (int) Double.parseDouble(line) * 10 + 2730;
+                count[temperature]++;
+            } else throw new Exception("Wrong data in file");
+        }
+
         inputReader.close();
-        Collections.sort(tempCounter);
+
         FileWriter outputWriter = new FileWriter(outputName);
-        for (double temperature : tempCounter) outputWriter.write(temperature + "\n");
+
+        for (int i = 0; i < 7731; i++)
+            if (count[i] != 0)
+                outputWriter.write((((double) (i - 2730)) / 10 + "\n").repeat(count[i]));
+
         outputWriter.close();
-            }
+    }
+
     /**
      * Сортировка последовательности
      * <p>

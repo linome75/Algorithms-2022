@@ -4,6 +4,7 @@ import kotlin.NotImplementedError;
 import kotlin.Pair;
 
 
+import java.util.ArrayList;
 import java.util.Arrays;
 
 import static java.lang.Math.sqrt;
@@ -113,9 +114,31 @@ public class JavaAlgorithms {
      * При сравнении подстрок, регистр символов *имеет* значение.
      * Если имеется несколько самых длинных общих подстрок одной длины,
      * вернуть ту из них, которая встречается раньше в строке first.
+     *
+     * Решение с "построением матрицы"
+     * Ресурсоемкость O(firstLength*secondLength)
+     * Трудоемкость O(firstLength*secondLength)
      */
-    static public String longestCommonSubstring(String firs, String second) {
-        throw new NotImplementedError();
+    static public String longestCommonSubstring(String first, String second) throws Exception {
+        if (first.isEmpty()||second.isEmpty()) throw new Exception("Wrong Data");
+        int maxLength = 0;
+        int coordinate = 0;
+        int firstLength = first.length();
+        int secondLength = second.length();
+        int [][] tableOfCount = new int[firstLength][secondLength];
+        for (int i = 0; i < firstLength-1; i++) {
+            for (int j = 0; j <secondLength-1; j++){
+                if (first.charAt(i) == second.charAt(j)) {
+                    if (i > 0 & j > 0) tableOfCount[i][j] = tableOfCount[i - 1][j - 1] + 1;
+                    else tableOfCount[i][j] = 1;
+                    if (tableOfCount[i][j] > maxLength) {
+                        maxLength = tableOfCount[i][j];
+                        coordinate = j;
+                }
+            }
+        }
+    }
+    return second.substring(coordinate-maxLength+1, coordinate+1);
     }
 
     /**
@@ -127,6 +150,10 @@ public class JavaAlgorithms {
      *
      * Справка: простым считается число, которое делится нацело только на 1 и на себя.
      * Единица простым числом не считается.
+     *
+     * Решето Эратосфена
+     * Ресурсоемкость O(N)
+     * Трудоемкость O(N*log(log(N)));
      */
     static public int calcPrimesNumber(int limit) {
         int res = 0;
