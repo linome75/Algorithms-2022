@@ -3,6 +3,11 @@ package lesson2;
 import kotlin.NotImplementedError;
 import kotlin.Pair;
 
+
+import java.util.Arrays;
+
+import static java.lang.Math.sqrt;
+
 @SuppressWarnings("unused")
 public class JavaAlgorithms {
     /**
@@ -81,9 +86,21 @@ public class JavaAlgorithms {
      *
      * Общий комментарий: решение из Википедии для этой задачи принимается,
      * но приветствуется попытка решить её самостоятельно.
+     *
+     * Решение из википедии
+     * Ресурсоемкость = O(1);
+     * Трудоемкость = O(N);
      */
-    static public int josephTask(int menNumber, int choiceInterval) {
-        throw new NotImplementedError();
+    static public int josephTask(int menNumber, int choiceInterval) throws Exception {
+        if (menNumber <=0 & choiceInterval <=0) throw new Exception("Wrong data");
+        else {
+            int result = 1;
+            if (menNumber > 1)
+            for (int i = 2; i <= menNumber; i++) {
+                result = (result + choiceInterval - 1) % i + 1;
+            }
+            return result;
+        }
     }
 
     /**
@@ -112,6 +129,17 @@ public class JavaAlgorithms {
      * Единица простым числом не считается.
      */
     static public int calcPrimesNumber(int limit) {
-        throw new NotImplementedError();
+        int res = 0;
+        if (limit == 2) return res;
+        if (limit > 2)  {
+        boolean[] flags = new boolean[(int) sqrt(limit)];
+        Arrays.fill(flags, true);
+        flags[1] = false;
+        for (int i = 2; i*i < limit; i++)
+            if (flags[i])
+                for (int j = i*i; j < limit; j+=i) {
+                    flags[i] = false;
+                    res++; } }
+        return res;
     }
 }

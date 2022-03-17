@@ -3,8 +3,7 @@ package lesson1;
 import kotlin.NotImplementedError;
 
 
-import java.io.File;
-import java.io.FileNotFoundException;
+
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.util.ArrayList;
@@ -148,10 +147,11 @@ public class JavaTasks {
         ArrayList<Double> tempCounter = new ArrayList<>();
         while (inputScanner.hasNextLine()) {
             String line = inputScanner.nextLine();
-            double temperature = Double.parseDouble(line);
-            tempCounter.add(temperature);
-
-
+            if (line.matches("([1-4]?\\d{1,2}.\\d)|(500.0)|(-[1]?\\d{1,2}.\\d)|(-2[0-6]\\d.\\d)|(-27[0-2].\\d)|(-273.0)")) {
+                double temperature = Double.parseDouble(line);
+                tempCounter.add(temperature);
+            }
+            else throw new Exception("Wrong data in file");
     }
         inputReader.close();
         Collections.sort(tempCounter);
