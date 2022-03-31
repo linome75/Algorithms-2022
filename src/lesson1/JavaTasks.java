@@ -5,6 +5,7 @@ import kotlin.NotImplementedError;
 
 import java.io.FileReader;
 import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -74,7 +75,7 @@ public class JavaTasks {
     static public Integer lineToInt(String line) throws Exception {
         int time = 1000000;
         if (!line.matches("^(0[1-9]|1[0-2])(:[0-5]\\d){2} [P|A]M$")) {
-            throw new Exception("Wrong data in file");
+            throw new IOException("Wrong data in file");
         } else {
             if (line.charAt(9) == 'P') time += 1000000;
             if (!line.startsWith("12")) time += Integer.parseInt(line.substring(0, 2)) * 10000;
@@ -156,9 +157,9 @@ public class JavaTasks {
         while (inputScanner.hasNextLine()) {
             String line = inputScanner.nextLine();
             if (line.matches("([1-4]?\\d{1,2}.\\d)|(500.0)|(-[1]?\\d{1,2}.\\d)|(-2[0-6]\\d.\\d)|(-27[0-2].\\d)|(-273.0)")) {
-                int temperature = (int) Double.parseDouble(line) * 10 + 2730;
+                int temperature = (int) (Double.parseDouble(line) * 10) + 2730;
                 count[temperature]++;
-            } else throw new Exception("Wrong data in file");
+            } else throw new IOException("Wrong data in file");
         }
 
         inputReader.close();

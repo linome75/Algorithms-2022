@@ -1,13 +1,17 @@
 package lesson1
 
 import org.junit.jupiter.api.Assertions.assertArrayEquals
+import org.junit.jupiter.api.assertThrows
 import util.PerfResult
 import util.estimate
 import java.io.BufferedWriter
 import java.io.File
+import java.io.FileNotFoundException
+import java.io.IOException
 import java.util.*
 import kotlin.math.abs
 import kotlin.system.measureNanoTime
+import kotlin.test.assertFailsWith
 
 abstract class AbstractTaskTests : AbstractFileTests() {
 
@@ -48,6 +52,16 @@ abstract class AbstractTaskTests : AbstractFileTests() {
         try {
             sortTimes("input/empty.txt", "temp.txt")
             assertFileContent("temp.txt", "")
+        } finally {
+            File("temp.txt").delete()
+        }
+        try {
+            assertFailsWith<FileNotFoundException> { sortTimes("input/nothing.txt", "temp.txt") }
+        } finally {
+            File("temp.txt").delete()
+        }
+        try {
+            assertFailsWith<IOException> { sortTimes("input/time_in4.txt", "temp.txt") }
         } finally {
             File("temp.txt").delete()
         }
@@ -133,6 +147,16 @@ abstract class AbstractTaskTests : AbstractFileTests() {
         try {
             sortTemperatures("input/empty.txt", "temp.txt")
             assertFileContent("temp.txt", "")
+        } finally {
+            File("temp.txt").delete()
+        }
+        try {
+            assertFailsWith<FileNotFoundException> { sortTimes("input/nothing.txt", "temp.txt") }
+        } finally {
+            File("temp.txt").delete()
+        }
+        try {
+            assertFailsWith<IOException> { sortTimes("input/temp_in2.txt", "temp.txt") }
         } finally {
             File("temp.txt").delete()
         }

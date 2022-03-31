@@ -4,7 +4,7 @@ import kotlin.NotImplementedError;
 import kotlin.Pair;
 
 
-import java.util.ArrayList;
+import java.io.IOException;
 import java.util.Arrays;
 
 import static java.lang.Math.sqrt;
@@ -93,7 +93,7 @@ public class JavaAlgorithms {
      * Трудоемкость = O(N);
      */
     static public int josephTask(int menNumber, int choiceInterval) throws Exception {
-        if (menNumber <=0 & choiceInterval <=0) throw new Exception("Wrong data");
+        if (menNumber <=0 & choiceInterval <=0) throw new IOException("Wrong data");
         else {
             int result = 1;
             if (menNumber > 1)
@@ -157,7 +157,7 @@ public class JavaAlgorithms {
      */
     static public int calcPrimesNumber(int limit) {
         int res = 0;
-        if (limit == 2) return res;
+        if (limit == 2) return 1;
         if (limit > 2)  {
         boolean[] flags = new boolean[(int) sqrt(limit)];
         Arrays.fill(flags, true);

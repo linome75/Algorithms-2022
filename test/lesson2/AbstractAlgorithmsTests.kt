@@ -2,8 +2,10 @@ package lesson2
 
 import java.io.BufferedWriter
 import java.io.File
+import java.io.IOException
 import java.util.*
 import kotlin.test.assertEquals
+import kotlin.test.assertFailsWith
 
 abstract class AbstractAlgorithmsTests {
 
@@ -66,6 +68,7 @@ abstract class AbstractAlgorithmsTests {
         assertEquals(50000000, josephTask(50000000, 1))
         assertEquals(3, josephTask(8, 5))
         assertEquals(28, josephTask(40, 3))
+        assertFailsWith<IOException> { josephTask(0,0) }
         var menNumber = 2
         for (i in 1..20) {
             assertEquals(1, josephTask(menNumber, 2))
