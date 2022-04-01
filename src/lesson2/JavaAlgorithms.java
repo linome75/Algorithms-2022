@@ -158,7 +158,8 @@ public class JavaAlgorithms {
     static public int calcPrimesNumber(int limit) {
         int res = 0;
         if (limit == 2) return 1;
-        if (limit > 2)  {
+        if (limit == 3 | limit == 4) return 2;
+        if (limit > 4)  {
         boolean[] flags = new boolean[(int) sqrt(limit)];
         Arrays.fill(flags, true);
         flags[1] = false;
