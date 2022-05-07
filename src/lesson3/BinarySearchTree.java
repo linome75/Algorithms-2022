@@ -12,6 +12,9 @@ public class BinarySearchTree<T extends Comparable<T>> extends AbstractSet<T> im
         final T value;
         Node<T> left = null;
         Node<T> right = null;
+        Node<T> parent = null;
+        Boolean isLeft = false;
+        Boolean isRight = false;
 
         Node(T value) {
             this.value = value;
@@ -79,10 +82,16 @@ public class BinarySearchTree<T extends Comparable<T>> extends AbstractSet<T> im
         else if (comparison < 0) {
             assert closest.left == null;
             closest.left = newNode;
+            newNode.parent = closest;
+            newNode.isLeft = true;
+            newNode.isRight = false;
         }
         else {
             assert closest.right == null;
             closest.right = newNode;
+            newNode.parent = closest;
+            newNode.isLeft = false;
+            newNode.isRight = true;
         }
         size++;
         return true;
@@ -101,10 +110,44 @@ public class BinarySearchTree<T extends Comparable<T>> extends AbstractSet<T> im
      */
     @Override
     public boolean remove(Object o) {
-        // TODO
-        throw new NotImplementedError();
+        T t = (T) o;
+        assert t != null;
+        Node<T> closest= find(t);
+        assert closest != null;
+
+        if (closest.value != o) return false;
+
+        if (closest.left == null && closest.right == null)
+            if (closest.isLeft) closest.parent.left = null;
+            else if (closest.isRight) closest.parent.right = null;
+
+        else if (closest.left == null)
+            if (closest.isLeft) closest.parent.left = closest.right;
+            else if (closest.isRight) closest.parent.right = closest.right;
+
+        else if (closest.right == null)
+            if (closest.isLeft) closest.parent.left = closest.left;
+            else if (closest.isRight) closest.parent.right = closest.left;
+        else {
+            Node<T> nodeToChange = maxRight(closest.left);
+            if (nodeToChange.isLeft) nodeToChange.parent.left = nodeToChange.left;
+            else nodeToChange.parent.right = nodeToChange.left;
+            nodeToChange.left = closest.left;
+            nodeToChange.right = closest.right;
+            if (closest.isLeft)
+                closest.parent.left = nodeToChange;
+            else closest.parent.right = nodeToChange;
+        }
+        return true;
     }
 
+    public Node<T> maxRight (Node<T> root) {
+        if (root.right != null) {
+            root = root.right;
+            maxRight(root);
+        }
+        return root;
+    }
     @Nullable
     @Override
     public Comparator<? super T> comparator() {
