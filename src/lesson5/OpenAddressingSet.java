@@ -129,9 +129,6 @@ public class OpenAddressingSet<T> extends AbstractSet<T> {
      * Спецификация: {@link Iterator} (Ctrl+Click по Iterator)
      * <p>
      * Средняя (сложная, если поддержан и remove тоже)
-     * <p>
-     * Трудоемкость
-     * Ресурсоемкость
      */
     @NotNull
     @Override
@@ -143,12 +140,16 @@ public class OpenAddressingSet<T> extends AbstractSet<T> {
         int index = 0;
         int objIndex = 0;
         T object;
-
+        /** Трудоемкость O(1)
+         * Ресурсоемкость O(1)
+         */
         @Override
         public boolean hasNext() {
             return objIndex < size;
         }
-
+        /** Трудоемкость O(n)
+        * Ресурсоемкость O(1)
+        */
         @Override
         public T next() {
             if (hasNext()) {
@@ -159,6 +160,18 @@ public class OpenAddressingSet<T> extends AbstractSet<T> {
                 return object;
             }
             throw new NoSuchElementException();
+        }
+        /** Трудоемкость O(1)
+         * Ресурсоемкость O(1)
+         */
+        @Override
+        public void remove() {
+            if (object != null) {
+                object = null;
+                objIndex--;
+                storage[index - 1] = deleted;
+                size--;
+            } else throw new IllegalStateException();
         }
     }
 }
