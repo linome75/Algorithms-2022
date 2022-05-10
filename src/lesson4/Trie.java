@@ -92,8 +92,20 @@ public class Trie extends AbstractSet<String> implements Set<String> {
     @NotNull
     @Override
     public Iterator<String> iterator() {
-        // TODO
-        throw new NotImplementedError();
+        return new TrieIterator();
     }
 
+    public class TrieIterator implements Iterator<String>{
+
+
+        @Override
+        public boolean hasNext() {
+            return false;
+        }
+
+        @Override
+        public String next() {
+            return null;
+        }
+    }
 }

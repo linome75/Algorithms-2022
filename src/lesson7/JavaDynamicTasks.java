@@ -1,9 +1,6 @@
 package lesson7;
 
-import kotlin.NotImplementedError;
 
-import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -61,11 +58,16 @@ public class JavaDynamicTasks {
      * Если самых длинных возрастающих подпоследовательностей несколько (как в примере),
      * то вернуть ту, в которой числа расположены раньше (приоритет имеют первые числа).
      * В примере ответами являются 2, 8, 9, 12 или 2, 5, 9, 12 -- выбираем первую из них.
+     *
+     * https://stackoverflow.com/questions/54885750/first-longest-increasing-subsequence
+     * Максимальная трудоемкость O(list.size*list.size)
+     * Рeсурсоемкость O(list.size)
+     *
      */
     public static List<Integer> longestIncreasingSubSequence(List<Integer> list) {
-        if (list.size() <= 1) return list;
-        Lis res = new Lis(list);
-        return res.length();
+        if (list.size() < 2) return list;
+        Lis input = new Lis(list);
+        return input.dfsd();
     }
 
     public static class Lis {
@@ -77,37 +79,32 @@ public class JavaDynamicTasks {
             seq = list.stream().filter(Objects::nonNull).mapToInt(Integer::intValue).toArray();
         }
 
-        public int lowerLast(int[] seq, int[] index, int x, int r, int l) {
-            while (r - l > 1) {
-                int m = l + (r - 1) / 2;
-                if (seq[index[m]] >= x)
-                    r = m;
-                else l = m;
-            }
-            return r;
-        }
-
-        public List<Integer> length() {
-            int[] preIndex = new int[size];
-            int[] nowIndex = new int[size];
-            Arrays.fill(nowIndex, 0);
-            Arrays.fill(preIndex, -1);
-            int length = 1;
-            for (int i = 1; i < size; i++) {
-                if (seq[i] < seq[nowIndex[0]])
-                    nowIndex[0] = i;
-                else if (seq[i] > seq[nowIndex[length - 1]]) {
-                    preIndex[i] = nowIndex[length - 1];
-                    nowIndex[length++] = i;
-                } else {
-                    int position = lowerLast(seq, nowIndex, seq[i], length - 1, -1);
-                    preIndex[i] = nowIndex[position - 1];
-                    nowIndex[position] = i;
+        public List<Integer> dfsd() {
+            int[][] lisTable = new int[size][2];
+            int length = 0;
+            for (int i = 0; i < size; i++) {
+                lisTable[i][0] = -1;
+                lisTable[i][1] = 1;
+                for (int j = i - 1; j >= 0; j--) {
+                    if (seq[i] > seq[j]) {
+                        if (lisTable[i][1] <= lisTable[j][1] + 1) {
+                            lisTable[i][1] = lisTable[j][1] + 1;
+                            lisTable[i][0] = j;
+                        }
+                    }
                 }
+                length = Math.max(length,lisTable[i][1]);
             }
             List<Integer> result = new ArrayList<>();
-            for (int i = nowIndex[length - 1]; i >= 0; i = preIndex[i]) {
-                result.add(seq[i]);
+            for (int i = 0; i < size; i++){
+                if (lisTable[i][1] == length) {
+                    int j = i;
+                    while (j != -1) {
+                        result.add(seq[j]);
+                        j = lisTable[j][0];
+                    }
+                    break;
+                }
             }
             Collections.reverse(result);
             return result;
