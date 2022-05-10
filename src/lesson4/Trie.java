@@ -1,7 +1,6 @@
 package lesson4;
 
 import java.util.*;
-import kotlin.NotImplementedError;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -96,16 +95,42 @@ public class Trie extends AbstractSet<String> implements Set<String> {
     }
 
     public class TrieIterator implements Iterator<String>{
+        Queue<String> words = new ArrayDeque<>();
+        String word;
 
-
+        public TrieIterator() {
+            if (root != null) getWord(root, "");
+        }
+        //Ресурсоемкость O(n)
+        //Трудоемкость O(n)
+        private void  getWord(Node node, String result) {
+            for (char child: node.children.keySet()){
+                if (child != (char) 0)
+                    getWord(node.children.get(child), result + child);
+                else words.add(result);
+            }
+        }
+        //Ресурсоемкость O(1)
+        //Трудоемкость O(1)
         @Override
         public boolean hasNext() {
-            return false;
+            return !words.isEmpty();
         }
-
+        //Ресурсоемкость O(n)
+        //Трудоемкость O(n)
         @Override
         public String next() {
-            return null;
+            if(!hasNext()) throw new NoSuchElementException();
+            word = words.remove();
+            return word;
+        }
+        //Ресурсоемкость O(n)
+        //Трудоемкость O(n)
+        @Override
+        public void remove(){
+            if (word == null) throw new IllegalStateException();
+            Trie.this.remove(word);
+            word = null;
         }
     }
 }
